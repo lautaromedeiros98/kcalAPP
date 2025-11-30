@@ -16,6 +16,7 @@ const STORAGE_KEYS = {
 const DOM = {
   form: document.getElementById('foodForm'),
   bmrForm: document.getElementById('bmrForm'), // Nuevo formulario de ajustes
+  macroForm: document.getElementById('macroForm'), // Formulario de macros
   inputs: {
     name: document.getElementById('foodName'),
     servings: document.getElementById('foodServings'),
@@ -31,7 +32,15 @@ const DOM = {
     bmrWeight: document.getElementById('bmrWeight'),
     bmrHeight: document.getElementById('bmrHeight'),
     bmrActivity: document.getElementById('bmrActivity'),
+    bmrGoal: document.getElementById('bmrGoal'),
     bmrResult: document.getElementById('bmrResult'),
+    // Inputs de Macros
+    macroP: document.getElementById('macroProteinPct'),
+    macroC: document.getElementById('macroCarbsPct'),
+    macroF: document.getElementById('macroFatPct'),
+    targetP: document.getElementById('targetProtein'),
+    targetC: document.getElementById('targetCarbs'),
+    targetF: document.getElementById('targetFat'),
   },
   buttons: {
     reset: document.getElementById('resetButton'),
@@ -88,6 +97,14 @@ function init() {
     DOM.inputs.bmrWeight.value = state.settings.weight;
     DOM.inputs.bmrHeight.value = state.settings.height;
     DOM.inputs.bmrActivity.value = state.settings.activity;
+    if (state.settings.goal) DOM.inputs.bmrGoal.value = state.settings.goal;
+
+    // Cargar macros si existen, o valores por defecto
+    const macros = state.settings.macros || { p: 30, c: 40, f: 30 };
+    DOM.inputs.macroP.value = macros.p;
+    DOM.inputs.macroC.value = macros.c;
+    DOM.inputs.macroF.value = macros.f;
+    updateMacroTargets(state.dailyTarget, macros);
   }
 
   // Renderizar estado inicial
@@ -96,6 +113,7 @@ function init() {
   // Configurar Listeners Globales
   DOM.form.addEventListener('submit', handleSubmit);
   DOM.bmrForm.addEventListener('submit', handleBMRCalculation); // Listener para ajustes
+  DOM.macroForm.addEventListener('submit', handleMacroSubmit);
   DOM.display.listBody.addEventListener('click', handleListClick);
   DOM.buttons.reset.addEventListener('click', handleResetDay);
 
@@ -319,6 +337,7 @@ function handleBMRCalculation(event) {
   const weight = parseFloat(formData.get('weight'));
   const height = parseFloat(formData.get('height'));
   const activity = parseFloat(formData.get('activity'));
+  const goal = parseFloat(formData.get('goal')) || 1.0;
 
   if (isNaN(age) || isNaN(weight) || isNaN(height)) return;
 
@@ -329,11 +348,14 @@ function handleBMRCalculation(event) {
   bmr += (gender === 'male') ? 5 : -161;
 
   // TDEE (Gasto Energético Total Diario)
-  const tdee = Math.round(bmr * activity);
+  let tdee = Math.round(bmr * activity);
+
+  // Ajuste por Objetivo
+  tdee = Math.round(tdee * goal);
 
   // Actualizar Estado
   state.dailyTarget = tdee;
-  state.settings = { gender, age, weight, height, activity };
+  state.settings = { gender, age, weight, height, activity, goal };
 
   // Guardar y Actualizar UI
   saveTarget(tdee);
@@ -343,6 +365,49 @@ function handleBMRCalculation(event) {
   renderSummary();
 
   alert(`¡Meta actualizada a ${tdee} kcal según tus datos!`);
+
+  // Actualizar macros también si ya están configurados
+  if (state.settings.macros) {
+    updateMacroTargets(tdee, state.settings.macros);
+  }
+}
+
+/**
+ * Maneja la configuración de macros
+ */
+function handleMacroSubmit(event) {
+  event.preventDefault();
+  const formData = new FormData(DOM.macroForm);
+
+  const p = parseFloat(formData.get('protein'));
+  const c = parseFloat(formData.get('carbs'));
+  const f = parseFloat(formData.get('fat'));
+
+  if ((p + c + f) !== 100) {
+    alert('Los porcentajes deben sumar exactamente 100%');
+    return;
+  }
+
+  const macros = { p, c, f };
+
+  // Guardar en settings
+  state.settings = { ...state.settings, macros };
+  saveSettings(state.settings);
+
+  // Actualizar UI
+  updateMacroTargets(state.dailyTarget, macros);
+  alert('Distribución de macros guardada.');
+}
+
+function updateMacroTargets(calories, macros) {
+  // Proteína y Carbs: 4 kcal/g, Grasa: 9 kcal/g
+  const gProtein = Math.round((calories * (macros.p / 100)) / 4);
+  const gCarbs = Math.round((calories * (macros.c / 100)) / 4);
+  const gFat = Math.round((calories * (macros.f / 100)) / 9);
+
+  DOM.inputs.targetP.textContent = `${gProtein}g`;
+  DOM.inputs.targetC.textContent = `${gCarbs}g`;
+  DOM.inputs.targetF.textContent = `${gFat}g`;
 }
 
 /**

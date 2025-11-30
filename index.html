@@ -212,6 +212,17 @@
               </select>
             </label>
 
+            <label>
+              Objetivo
+              <select id="bmrGoal" name="goal">
+                <option value="0.8">Déficit agresivo (-20%)</option>
+                <option value="0.9">Déficit moderado (-10%)</option>
+                <option value="1.0" selected>Mantener peso</option>
+                <option value="1.1">Volumen moderado (+10%)</option>
+                <option value="1.2">Volumen agresivo (+20%)</option>
+              </select>
+            </label>
+
             <div class="summary" style="margin-top: 1rem; border-top: 1px solid var(--gray-100); padding-top: 1rem;">
               <div>
                 <p class="summary-label">Meta Calculada</p>
@@ -220,6 +231,50 @@
             </div>
 
             <button type="submit" class="primary">Calcular y Actualizar Meta</button>
+          </form>
+        </section>
+
+        <!-- PANEL 3: Configuración de Macros -->
+        <section class="panel span-2">
+          <div class="panel-header">
+            <h2>Distribución de Macronutrientes</h2>
+            <p>Define el porcentaje de calorías para cada macro (Debe sumar 100%).</p>
+          </div>
+          <form id="macroForm" class="form">
+            <div class="form-row">
+              <label>
+                Proteína (%)
+                <input type="number" id="macroProteinPct" name="protein" min="0" max="100" placeholder="30" required />
+              </label>
+              <label>
+                Carbohidratos (%)
+                <input type="number" id="macroCarbsPct" name="carbs" min="0" max="100" placeholder="40" required />
+              </label>
+              <label>
+                Grasas (%)
+                <input type="number" id="macroFatPct" name="fat" min="0" max="100" placeholder="30" required />
+              </label>
+            </div>
+
+            <div class="summary" style="margin-top: 1rem; border-top: 1px solid var(--gray-100); padding-top: 1rem;">
+              <p class="summary-label" style="margin-bottom: 0.5rem;">Objetivos Diarios (Estimados)</p>
+              <div class="macro-stats">
+                <div class="macro-item">
+                  <span class="macro-label">Prot</span>
+                  <span class="macro-value" id="targetProtein">0g</span>
+                </div>
+                <div class="macro-item">
+                  <span class="macro-label">Carb</span>
+                  <span class="macro-value" id="targetCarbs">0g</span>
+                </div>
+                <div class="macro-item">
+                  <span class="macro-label">Grasa</span>
+                  <span class="macro-value" id="targetFat">0g</span>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="primary">Guardar Distribución</button>
           </form>
         </section>
       </main>
