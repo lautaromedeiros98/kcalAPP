@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KcalAPP - Contador de calorías</title>
+  <!-- Estilos principales de la aplicación -->
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Fuentes de Google: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <!-- Contenedor principal para limitar el ancho en pantallas grandes -->
+  <div class="app-shell">
+
+    <!-- HEADER: Muestra el título y el resumen principal (Hero) -->
+    <header class="hero">
+      <div>
+        <p class="badge">Versión básica</p>
+        <h1>KcalAPP</h1>
+        <p class="lead">
+          Controla tus comidas diarias, vigila tu consumo calórico y mantén a
+          la vista tus metas nutricionales.
+        </p>
+      </div>
+
+      <!-- Tarjeta de resumen principal con barra de progreso y macros -->
+      <div class="hero-card">
+        <p class="hero-label">Calorías del día</p>
+        <p class="hero-value" id="heroTotal">0 kcal</p>
+        <p class="hero-target">Meta diaria <span id="heroTarget">2000 kcal</span></p>
+
+        <!-- Barra de progreso visual -->
+        <div class="progress">
+          <div class="progress-bar" id="heroProgress"></div>
+        </div>
+
+        <!-- Desglose de Macronutrientes -->
+        <div class="macro-stats">
+          <div class="macro-item">
+            <span class="macro-label">Prot</span>
+            <span class="macro-value" id="heroProtein">0g</span>
+          </div>
+          <div class="macro-item">
+            <span class="macro-label">Carb</span>
+            <span class="macro-value" id="heroCarbs">0g</span>
+          </div>
+          <div class="macro-item">
+            <span class="macro-label">Grasa</span>
+            <span class="macro-value" id="heroFat">0g</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- NAVEGACIÓN DE VISTAS -->
+    <nav class="app-nav">
+      <button id="navTracker" class="nav-link active">Tracker</button>
+      <button id="navSettings" class="nav-link">Ajustes</button>
+    </nav>
+
+    <!-- VISTA PRINCIPAL: TRACKER -->
+    <div id="view-tracker">
+      <main class="grid">
+
+        <!-- PANEL 1: Formulario de registro -->
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Registrar alimento</h2>
+            <p>Agrega un ítem con sus macros y calorías.</p>
+          </div>
+          <form id="foodForm" class="form">
+            <label>
+              Nombre del alimento
+              <input type="text" id="foodName" name="foodName" placeholder="Ej. Avena con frutas" required />
+            </label>
+
+            <!-- Fila 1: Porciones y Calorías -->
+            <div class="form-row">
+              <label>
+                Porciones
+                <input type="number" id="foodServings" name="foodServings" min="0.1" step="0.1" value="1" required />
+              </label>
+              <label>
+                Calorías (x porción)
+                <input type="number" id="foodCalories" name="foodCalories" min="0" step="1" placeholder="120"
+                  required />
+              </label>
+            </div>
+
+            <!-- Fila 2: Macros (Opcionales) -->
+            <div class="form-row">
+              <label>
+                Proteína (g)
+                <input type="number" id="foodProtein" name="foodProtein" min="0" step="0.1" placeholder="0" />
+              </label>
+              <label>
+                Carbs (g)
+                <input type="number" id="foodCarbs" name="foodCarbs" min="0" step="0.1" placeholder="0" />
+              </label>
+              <label>
+                Grasas (g)
+                <input type="number" id="foodFat" name="foodFat" min="0" step="0.1" placeholder="0" />
+              </label>
+            </div>
+
+            <label>
+              Categoría
+              <select id="foodCategory" name="foodCategory">
+                <option value="Desayuno">Desayuno</option>
+                <option value="Comida">Comida</option>
+                <option value="Cena">Cena</option>
+                <option value="Snack">Snack</option>
+                <option value="Bebida">Bebida</option>
+              </select>
+            </label>
+            <button id="addButton" type="submit" class="primary">Añadir</button>
+          </form>
+        </section>
+
+        <!-- PANEL 2: Resumen simple -->
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Resumen diario</h2>
+            <p>Progreso hacia tu meta calculada.</p>
+          </div>
+          <div class="summary">
+            <div>
+              <p class="summary-label">Total consumido</p>
+              <p class="summary-value" id="summaryTotal">0 kcal</p>
+            </div>
+            <div>
+              <p class="summary-label">Restante</p>
+              <p class="summary-value" id="summaryRemaining">2000 kcal</p>
+            </div>
+          </div>
+          <button id="resetButton" class="secondary">Reiniciar día</button>
+        </section>
+
+        <!-- PANEL 3: Tabla de historial (Ocupa 2 columnas si es posible) -->
+        <section class="panel span-2">
+          <div class="panel-header">
+            <h2>Historial de alimentos</h2>
+            <p>Gestiona tus registros. Toca el ítem para editar.</p>
+          </div>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Alimento</th>
+                  <th>Prot</th>
+                  <th>Carb</th>
+                  <th>Grasa</th>
+                  <th>Calorías</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="foodList"></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- VISTA SECUNDARIA: AJUSTES (Calculadora BMR) -->
+    <div id="view-settings" class="hidden">
+      <main class="grid">
+        <section class="panel span-2">
+          <div class="panel-header">
+            <h2>Calculadora de Requerimientos</h2>
+            <p>Usa la fórmula Mifflin-St Jeor para calcular tu meta calórica ideal.</p>
+          </div>
+
+          <form id="bmrForm" class="form">
+            <div class="form-row">
+              <label>
+                Género
+                <select id="bmrGender" name="gender">
+                  <option value="male">Hombre</option>
+                  <option value="female">Mujer</option>
+                </select>
+              </label>
+              <label>
+                Edad (años)
+                <input type="number" id="bmrAge" name="age" placeholder="25" required />
+              </label>
+            </div>
+
+            <div class="form-row">
+              <label>
+                Peso (kg)
+                <input type="number" id="bmrWeight" name="weight" placeholder="70" step="0.1" required />
+              </label>
+              <label>
+                Altura (cm)
+                <input type="number" id="bmrHeight" name="height" placeholder="175" required />
+              </label>
+            </div>
+
+            <label>
+              Nivel de Actividad
+              <select id="bmrActivity" name="activity">
+                <option value="1.2">Sedentario (Poco o nada de ejercicio)</option>
+                <option value="1.375">Ligero (Ejercicio 1-3 días/semana)</option>
+                <option value="1.55">Moderado (Ejercicio 3-5 días/semana)</option>
+                <option value="1.725">Activo (Ejercicio 6-7 días/semana)</option>
+                <option value="1.9">Muy Activo (Trabajo físico o doble entreno)</option>
+              </select>
+            </label>
+
+            <div class="summary" style="margin-top: 1rem; border-top: 1px solid var(--gray-100); padding-top: 1rem;">
+              <div>
+                <p class="summary-label">Meta Calculada</p>
+                <p class="summary-value" id="bmrResult">0 kcal</p>
+              </div>
+            </div>
+
+            <button type="submit" class="primary">Calcular y Actualizar Meta</button>
+          </form>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- TEMPLATE: Plantilla para las filas de la tabla (No visible al cargar) -->
+  <template id="rowTemplate">
+    <tr>
+      <td>
+        <div class="food-name"></div>
+        <div class="food-meta"></div>
+      </td>
+      <td class="food-protein"></td>
+      <td class="food-carbs"></td>
+      <td class="food-fat"></td>
+      <td class="food-total"></td>
+      <td class="actions">
+        <button class="icon" data-action="edit" title="Editar">
+          ✏️
+        </button>
+        <button class="icon" data-action="remove" title="Eliminar">
+          🗑️
+        </button>
+      </td>
+    </tr>
+  </template>
+
+  <!-- Lógica de la aplicación -->
+  <script src="app.js" type="module"></script>
+</body>
+
+</html>

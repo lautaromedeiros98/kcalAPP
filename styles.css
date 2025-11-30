@@ -1,0 +1,377 @@
+/* =========================================
+   VARIABLES & CONFIGURACIÓN
+   ========================================= */
+:root {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #101828;
+  background: #f5f6fb;
+  line-height: 1.4;
+
+  /* Paleta de colores */
+  --primary: #ec4a2a;
+  --primary-dark: #c63a1f;
+  --gray-100: #f2f4f7;
+  --gray-300: #d0d5dd;
+  --gray-500: #667085;
+  --gray-900: #101828;
+
+  /* Bordes y espaciados */
+  --radius-lg: 24px;
+}
+
+/* =========================================
+   RESET BÁSICO
+   ========================================= */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0 1.5rem 2rem;
+  min-height: 100vh;
+}
+
+/* =========================================
+   LAYOUT PRINCIPAL
+   ========================================= */
+/* =========================================
+   LAYOUT PRINCIPAL
+   ========================================= */
+.app-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Navegación de Vistas */
+.app-nav {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--gray-300);
+  padding-bottom: 0.5rem;
+}
+
+.nav-link {
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--gray-500);
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--gray-900);
+  background: var(--gray-100);
+}
+
+.nav-link.active {
+  color: var(--primary);
+  background: #fff4ef;
+  font-weight: 600;
+}
+
+/* Utilidad para ocultar vistas */
+.hidden {
+  display: none !important;
+}
+
+.grid {
+  display: grid;
+  /* Crea columnas automáticas con un ancho mínimo de 260px */
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Utilidad para que un panel ocupe 2 columnas */
+.span-2 {
+  grid-column: span 2;
+}
+
+/* =========================================
+   HERO SECTION (Encabezado)
+   ========================================= */
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  padding: 3rem 0 2rem;
+}
+
+.hero .badge {
+  display: inline-flex;
+  padding: 0.15rem 0.75rem;
+  border-radius: 999px;
+  background: #fff4ef;
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.hero h1 {
+  margin: 0.25rem 0 0.5rem;
+  font-size: clamp(2.4rem, 5vw, 3.2rem);
+}
+
+.hero .lead {
+  color: var(--gray-500);
+  max-width: 40ch;
+}
+
+/* Tarjeta de resumen en el Hero */
+.hero-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: 0 12px 30px rgba(16, 24, 40, 0.12);
+  width: min(320px, 100%);
+}
+
+.hero-label {
+  color: var(--gray-500);
+  margin: 0;
+}
+
+.hero-value {
+  font-size: 2.5rem;
+  margin: 0.25rem 0;
+  font-weight: 600;
+}
+
+.hero-target {
+  color: var(--gray-500);
+  margin: 0 0 1rem;
+}
+
+/* Stats de Macros en Hero */
+.macro-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--gray-100);
+}
+
+.macro-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.macro-label {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.macro-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+/* Barra de progreso */
+.progress {
+  width: 100%;
+  height: 10px;
+  background: var(--gray-100);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #f97316, #ec4a2a);
+  transition: width 0.25s ease;
+}
+
+/* =========================================
+   PANELES Y TARJETAS
+   ========================================= */
+.panel {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.08);
+}
+
+.panel-header h2 {
+  margin: 0;
+}
+
+.panel-header p {
+  margin: 0.25rem 0 1rem;
+  color: var(--gray-500);
+}
+
+/* =========================================
+   FORMULARIOS
+   ========================================= */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.95rem;
+  font-weight: 500;
+  gap: 0.35rem;
+}
+
+.form input,
+.form select {
+  border: 1px solid var(--gray-300);
+  border-radius: 12px;
+  padding: 0.75rem 0.9rem;
+  font-size: 1rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  /* Permite que los inputs bajen si no hay espacio */
+}
+
+.form-row label {
+  flex: 1;
+  min-width: 80px;
+  /* Evita que los inputs se hagan demasiado pequeños */
+}
+
+/* Botones */
+.primary,
+.secondary {
+  border: none;
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.primary {
+  background: var(--primary);
+  color: white;
+}
+
+.primary:hover {
+  background: var(--primary-dark);
+}
+
+.secondary {
+  background: var(--gray-100);
+  color: var(--gray-900);
+}
+
+.primary:active,
+.secondary:active,
+.icon:active {
+  transform: scale(0.98);
+}
+
+/* =========================================
+   RESUMEN Y TABLAS
+   ========================================= */
+.summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--gray-100);
+  margin-bottom: 1rem;
+}
+
+.summary-label {
+  margin: 0;
+  color: var(--gray-500);
+}
+
+.summary-value {
+  margin: 0.35rem 0 0;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+/* Tabla de historial */
+.table-wrapper {
+  max-height: 420px;
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.75rem 0.25rem;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+th {
+  color: var(--gray-500);
+  font-weight: 500;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.food-name {
+  font-weight: 600;
+  display: block;
+}
+
+.food-meta {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+}
+
+.actions {
+  text-align: right;
+}
+
+.icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  margin-left: 0.35rem;
+}
+
+/* =========================================
+   MEDIA QUERIES (Responsividad)
+   ========================================= */
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+  }
+
+  .form-row {
+    flex-direction: column;
+  }
+
+  .summary {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 620px) {
+  .span-2 {
+    grid-column: span 1;
+  }
+}
