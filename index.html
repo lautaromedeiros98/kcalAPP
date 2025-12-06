@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>KcalAPP - Contador de calorías</title>
   <!-- Estilos principales de la aplicación -->
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="css/main.css" />
   <!-- Fuentes de Google: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -175,35 +175,35 @@
             <p>Usa la fórmula Mifflin-St Jeor para calcular tu meta calórica ideal.</p>
           </div>
 
-          <form id="bmrForm" class="form">
+          <form id="settingsForm" class="form">
             <div class="form-row">
               <label>
                 Género
-                <select id="bmrGender" name="gender">
+                <select id="settingsGender" name="gender">
                   <option value="male">Hombre</option>
                   <option value="female">Mujer</option>
                 </select>
               </label>
               <label>
                 Edad (años)
-                <input type="number" id="bmrAge" name="age" placeholder="25" required />
+                <input type="number" id="settingsAge" name="age" placeholder="25" required />
               </label>
             </div>
 
             <div class="form-row">
               <label>
                 Peso (kg)
-                <input type="number" id="bmrWeight" name="weight" placeholder="70" step="0.1" required />
+                <input type="number" id="settingsWeight" name="weight" placeholder="70" step="0.1" required />
               </label>
               <label>
                 Altura (cm)
-                <input type="number" id="bmrHeight" name="height" placeholder="175" required />
+                <input type="number" id="settingsHeight" name="height" placeholder="175" required />
               </label>
             </div>
 
             <label>
               Nivel de Actividad
-              <select id="bmrActivity" name="activity">
+              <select id="settingsActivity" name="activity">
                 <option value="1.2">Sedentario (Poco o nada de ejercicio)</option>
                 <option value="1.375">Ligero (Ejercicio 1-3 días/semana)</option>
                 <option value="1.55">Moderado (Ejercicio 3-5 días/semana)</option>
@@ -214,7 +214,7 @@
 
             <label>
               Objetivo
-              <select id="bmrGoal" name="goal">
+              <select id="settingsGoal" name="goal">
                 <option value="0.8">Déficit agresivo (-20%)</option>
                 <option value="0.9">Déficit moderado (-10%)</option>
                 <option value="1.0" selected>Mantener peso</option>
@@ -226,7 +226,7 @@
             <div class="summary" style="margin-top: 1rem; border-top: 1px solid var(--gray-100); padding-top: 1rem;">
               <div>
                 <p class="summary-label">Meta Calculada</p>
-                <p class="summary-value" id="bmrResult">0 kcal</p>
+                <p class="summary-value" id="settingsResult">0 kcal</p>
               </div>
             </div>
 
@@ -304,7 +304,7 @@
   </template>
 
   <!-- Lógica de la aplicación -->
-  <script src="app.js" type="module"></script>
+  <script src="js/app.js" type="module"></script>
 </body>
 
 </html>

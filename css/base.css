@@ -1,0 +1,30 @@
+/* =========================================
+   VARIABLES & RESET
+   ========================================= */
+:root {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #101828;
+  background: #f5f6fb;
+  line-height: 1.4;
+
+  /* Paleta de colores */
+  --primary: #ec4a2a;
+  --primary-dark: #c63a1f;
+  --gray-100: #f2f4f7;
+  --gray-300: #d0d5dd;
+  --gray-500: #667085;
+  --gray-900: #101828;
+
+  /* Bordes y espaciados */
+  --radius-lg: 24px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0 1.5rem 2rem;
+  min-height: 100vh;
+}
