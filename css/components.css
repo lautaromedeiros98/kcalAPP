@@ -28,7 +28,7 @@
     border-radius: var(--radius-lg);
     padding: 1.75rem;
     box-shadow: 0 12px 30px rgba(16, 24, 40, 0.12);
-    width: min(320px, 100%);
+    width: min(480px, 100%);
 }
 
 .hero-label {
@@ -60,6 +60,22 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* Nuevo estilo Card */
+    background: var(--gray-100);
+    padding: 0.75rem;
+    border-radius: 12px;
+    flex: 1;
+    /* Para que todos ocupen el mismo ancho */
+    margin: 0 0.25rem;
+    /* Pequeño espacio entre ellos */
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.macro-item:hover {
+    background: #fff;
+    border-color: var(--gray-300);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .macro-label {
@@ -71,24 +87,58 @@
 }
 
 .macro-value {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
+    /* Ligeramente más pequeño para que quepa el texto largo */
     font-weight: 600;
     color: var(--gray-900);
+    margin-top: 0.25rem;
+    text-align: center;
 }
 
 .progress {
     width: 100%;
-    height: 10px;
+    height: 8px;
+    /* Un poco más fina dentro de las cards */
     background: var(--gray-100);
     border-radius: 999px;
     overflow: hidden;
+    margin-top: 0.5rem;
+    /* Separación del texto */
+}
+
+/* Ajuste de contraste para el track dentro de las cards grises */
+.macro-item .progress {
+    background: #e5e7eb;
+    /* un gris un poco más oscuro que el fondo para que se note */
+}
+
+.progress-bar,
+.progress-bar-protein,
+.progress-bar-carb,
+.progress-bar-fat {
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    transition: width 0.3s ease-out;
 }
 
 .progress-bar {
-    height: 100%;
-    width: 0;
     background: linear-gradient(90deg, #f97316, #ec4a2a);
-    transition: width 0.25s ease;
+}
+
+.progress-bar-protein {
+    background: #3b82f6;
+    /* Azul */
+}
+
+.progress-bar-carb {
+    background: #f59e0b;
+    /* Naranja */
+}
+
+.progress-bar-fat {
+    background: #eab308;
+    /* Amarillo */
 }
 
 /* --- Paneles --- */

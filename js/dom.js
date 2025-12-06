@@ -52,8 +52,11 @@ export const DOM = {
             target: document.getElementById('heroTarget'),
             progress: document.getElementById('heroProgress'),
             protein: document.getElementById('heroProtein'),
+            progressProtein: document.getElementById('heroProgressProtein'),
             carbs: document.getElementById('heroCarbs'),
+            progressCarb: document.getElementById('heroProgressCarb'),
             fat: document.getElementById('heroFat'),
+            progressFat: document.getElementById('heroProgressFat'),
         },
         summary: {
             total: document.getElementById('summaryTotal'),

@@ -77,9 +77,36 @@ export function renderSummary() {
     DOM.display.hero.target.textContent = `${state.dailyTarget} kcal`;
     DOM.display.hero.progress.style.width = `${percentage}%`;
 
-    DOM.display.hero.protein.textContent = `${formatNumber(macros.p)}g`;
-    DOM.display.hero.carbs.textContent = `${formatNumber(macros.c)}g`;
-    DOM.display.hero.fat.textContent = `${formatNumber(macros.f)}g`;
+    // Obtener objetivos de macros si existen
+    const macroTargets = state.settings && state.settings.macros ? {
+        p: Math.round((state.dailyTarget * (state.settings.macros.p / 100)) / 4),
+        c: Math.round((state.dailyTarget * (state.settings.macros.c / 100)) / 4),
+        f: Math.round((state.dailyTarget * (state.settings.macros.f / 100)) / 9)
+    } : { p: 0, c: 0, f: 0 };
+
+    // Calcular porcentajes de cumplimiento
+    const getPercent = (current, target) => target > 0 ? Math.round((current / target) * 100) : 0;
+
+    // Helper para formatear la salida: "0g / 150g (0%)"
+    const formatMacroStats = (current, target) => {
+        const percent = getPercent(current, target);
+        // Limitamos visualmente al 100% para que no se salga de la barra
+        const visualPercent = Math.min(percent, 100);
+        return { text: `${formatNumber(current)}g / ${target}g (${percent}%)`, percent: visualPercent };
+    };
+
+    const pStats = formatMacroStats(macros.p, macroTargets.p);
+    const cStats = formatMacroStats(macros.c, macroTargets.c);
+    const fStats = formatMacroStats(macros.f, macroTargets.f);
+
+    DOM.display.hero.protein.textContent = pStats.text;
+    DOM.display.hero.progressProtein.style.width = `${pStats.percent}%`;
+
+    DOM.display.hero.carbs.textContent = cStats.text;
+    DOM.display.hero.progressCarb.style.width = `${cStats.percent}%`;
+
+    DOM.display.hero.fat.textContent = fStats.text;
+    DOM.display.hero.progressFat.style.width = `${fStats.percent}%`;
 
     DOM.display.summary.total.textContent = `${formatNumber(total)} kcal`;
     DOM.display.summary.remaining.textContent = `${formatNumber(remaining)} kcal`;
