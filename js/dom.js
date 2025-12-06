@@ -1,3 +1,9 @@
+/**
+ * @module DOM
+ * @description Diccionario centralizado de referencias a elementos del DOM.
+ * Evita la dispersión de 'document.getElementById' por toda la aplicación,
+ * facilitando el mantenimiento si cambian los IDs en el HTML.
+ */
 export const DOM = {
     form: document.getElementById('foodForm'),
     settingsForm: document.getElementById('settingsForm'),

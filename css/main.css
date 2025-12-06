@@ -1,3 +1,8 @@
+/**
+ * CONTROLADOR PRINCIPAL DE ESTILOS
+ * Este archivo actúa como punto de entrada y orquesta la carga de estilos.
+ * No debe contener reglas CSS directas, solo @imports.
+ */
 @import 'base.css';
 @import 'layout.css';
 @import 'components.css';

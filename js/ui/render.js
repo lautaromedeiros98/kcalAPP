@@ -1,12 +1,28 @@
+/**
+ * @module UI/Render
+ * @description Módulo responsable de actualizar el DOM.
+ * Contiene funciones para renderizar listas, tablas y resúmenes 
+ * basados en el estado actual de la aplicación.
+ */
 import { DOM } from '../dom.js';
 import { state } from '../state.js';
 import { formatNumber } from '../utils.js';
 
+/**
+ * Actualiza toda la interfaz de usuario.
+ * Llama a las funciones específicas de renderizado para listas y resúmenes.
+ */
 export function render() {
     renderList();
     renderSummary();
 }
 
+/**
+ * Renderiza la tabla de alimentos consumidos.
+ * - Limpia la tabla actual.
+ * - Si no hay datos, muestra un mensaje de "lista vacía".
+ * - Si hay datos, genera filas usando un DocumentFragment para mejor rendimiento.
+ */
 export function renderList() {
     DOM.display.listBody.innerHTML = '';
 
@@ -40,6 +56,12 @@ export function renderList() {
     DOM.display.listBody.appendChild(fragment);
 }
 
+/**
+ * Calcula y renderiza el resumen de calorías y macros.
+ * - Suma todas las calorías de los items.
+ * - Calcula porcentajes para la barra de progreso.
+ * - Actualiza los contadores en el "Hero" y panel de resumen.
+ */
 export function renderSummary() {
     const total = state.items.reduce((sum, item) => sum + item.totalCalories, 0);
     const remaining = Math.max(state.dailyTarget - total, 0);
@@ -63,6 +85,12 @@ export function renderSummary() {
     DOM.display.summary.remaining.textContent = `${formatNumber(remaining)} kcal`;
 }
 
+/**
+ * Actualiza las etiquetas de objetivos de macros (g) basado en la meta calórica.
+ * Formula: (Calorías * Porcentaje) / kcal_por_gramo
+ * @param {number} calories - Meta calórica diaria.
+ * @param {Object} macros - Objeto con porcentajes {p, c, f}.
+ */
 export function updateMacroTargets(calories, macros) {
     const gProtein = Math.round((calories * (macros.p / 100)) / 4);
     const gCarbs = Math.round((calories * (macros.c / 100)) / 4);
@@ -73,6 +101,11 @@ export function updateMacroTargets(calories, macros) {
     DOM.inputs.targetF.textContent = `${gFat}g`;
 }
 
+/**
+ * Cambia la vista activa de la aplicación (Tracker <-> Ajustes).
+ * Gestiona clases CSS para mostrar/ocultar secciones y resaltar la navegación.
+ * @param {string} viewName - Nombre de la vista ('tracker' o 'settings').
+ */
 export function switchView(viewName) {
     DOM.nav.tracker.classList.toggle('active', viewName === 'tracker');
     DOM.nav.settings.classList.toggle('active', viewName === 'settings');

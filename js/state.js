@@ -1,3 +1,9 @@
+/**
+ * @module State
+ * @description Gestión del estado global de la aplicación.
+ * actúa como la "Fuente de la Verdad" en memoria, manteniendo
+ * la lista de items, metas y configuraciones actuales.
+ */
 import { loadItems, loadTarget, loadSettings } from './storage.js';
 
 export let state = {
@@ -7,6 +13,12 @@ export let state = {
     settings: loadSettings(),
 };
 
+/**
+ * Actualiza parcialmente un item en el array de estado.
+ * Mantiene la inmutabilidad de los otros items devolviendo un nuevo array.
+ * @param {string} id - ID del item a modificar.
+ * @param {Object} payload - Objeto con las propiedades a sobrescribir.
+ */
 export function updateItemInState(id, payload) {
     state.items = state.items.map((item) => {
         if (item.id === id) {
@@ -16,18 +28,34 @@ export function updateItemInState(id, payload) {
     });
 }
 
+/**
+ * Agrega un nuevo registro al inicio de la lista (LIFO para vista).
+ * @param {Object} item - El objeto completo del alimento.
+ */
 export function addItemToState(item) {
     state.items = [item, ...state.items];
 }
 
+/**
+ * Elimina un registro del estado filtrando por ID.
+ * @param {string} id - ID del item a eliminar.
+ */
 export function removeItemFromState(id) {
     state.items = state.items.filter((item) => item.id !== id);
 }
 
+/**
+ * Borra todos los registros actuales (vacía el array).
+ */
 export function resetStateItems() {
     state.items = [];
 }
 
+/**
+ * Busca y devuelve un item específico por su ID.
+ * @param {string} id - ID a buscar.
+ * @returns {Object|undefined} El item encontrado o undefined.
+ */
 export function findItem(id) {
     return state.items.find((item) => item.id === id);
 }

@@ -1,9 +1,20 @@
+/**
+ * @module App
+ * @description Punto de entrada principal de la aplicación.
+ * Orquesta la inicialización, maneja eventos del DOM y coordina
+ * la comunicación entre el Estado, la Persistencia y la Vista.
+ */
 import { DOM } from './dom.js';
 import { state, addItemToState, updateItemInState, removeItemFromState, resetStateItems, findItem } from './state.js';
 import { saveItems, saveTarget, saveSettings } from './storage.js';
 import { render, updateMacroTargets, switchView } from './ui/render.js';
 import { formatNumber, calculateBMR } from './utils.js';
 
+/**
+ * Inicialización de la aplicación.
+ * Carga la configuración guardada, inicializa los inputs con valores existentes,
+ * renderiza el estado inicial y asigna todos los event listeners.
+ */
 function init() {
     if (state.settings) {
         DOM.inputs.settingsGender.value = state.settings.gender;
@@ -35,6 +46,11 @@ function init() {
     switchView('tracker');
 }
 
+/**
+ * Maneja el envío del formulario principal (añadir alimento).
+ * Extrae datos, valida, actualiza el estado (añadir/editar) y refresca la UI.
+ * @param {Event} event - El evento submit del formulario.
+ */
 function handleSubmit(event) {
     event.preventDefault();
     const formData = new FormData(DOM.form);
@@ -68,6 +84,10 @@ function handleSubmit(event) {
     render();
 }
 
+/**
+ * Crea un nuevo objeto de alimento con ID único y lo añade al estado.
+ * @param {Object} payload - Datos del alimento (nombre, calorías, macros, etc).
+ */
 function addItem(payload) {
     const newItem = {
         id: crypto.randomUUID(),
@@ -77,10 +97,22 @@ function addItem(payload) {
     addItemToState(newItem);
 }
 
+/**
+ * Actualiza un alimento existente por su ID.
+ * @param {string} id - UUID del alimento.
+ * @param {Object} payload - Nuevos datos a actualizar.
+ */
 function updateItem(id, payload) {
     updateItemInState(id, payload);
 }
 
+/**
+ * Inicia el modo edición para un registro específico.
+ * - Busca el item en el estado.
+ * - Rellena el formulario con sus datos.
+ * - Cambia el texto del botón de acción.
+ * @param {string} id - UUID del alimento a editar.
+ */
 function startEditing(id) {
     const item = findItem(id);
     if (!item) return;
@@ -99,6 +131,10 @@ function startEditing(id) {
     DOM.inputs.name.focus();
 }
 
+/**
+ * Finaliza el modo edición y resetea el formulario.
+ * Devuelve la aplicación al estado de "Añadir nuevo".
+ */
 function stopEditing() {
     state.editingId = null;
     DOM.form.reset();
@@ -106,6 +142,10 @@ function stopEditing() {
     DOM.buttons.add.textContent = 'Añadir';
 }
 
+/**
+ * Elimina un registro del estado y actualiza la persistencia.
+ * @param {string} id - UUID del alimento a eliminar.
+ */
 function deleteItem(id) {
     removeItemFromState(id);
     if (state.editingId === id) {
@@ -115,6 +155,9 @@ function deleteItem(id) {
     render();
 }
 
+/**
+ * Reinicia todos los registros del día actual tras confirmación del usuario.
+ */
 function handleResetDay() {
     if (!state.items.length) return;
     const confirmReset = window.confirm('¿Deseas eliminar todos los registros del día?');
@@ -126,6 +169,11 @@ function handleResetDay() {
     render();
 }
 
+/**
+ * Manejador delegado para clics en la lista de alimentos.
+ * Detecta si el clic fue en un botón de "Editar" o "Eliminar" y despacha la acción correspondiente.
+ * @param {Event} event - Evento click en el cuerpo de la tabla.
+ */
 function handleListClick(event) {
     const button = event.target.closest('button[data-action]');
     if (!button) return;
@@ -137,6 +185,11 @@ function handleListClick(event) {
     else if (action === 'edit') startEditing(id);
 }
 
+/**
+ * Procesa el formulario de configuración de objetivos y BMR.
+ * Calcula el BMR (Mifflin-St Jeor) y TDEE basado en los inputs del usuario.
+ * @param {Event} event - Evento submit del formulario de ajustes.
+ */
 function handleSettingsSubmit(event) {
     event.preventDefault();
     const formData = new FormData(DOM.settingsForm);
@@ -179,6 +232,11 @@ function handleSettingsSubmit(event) {
     }
 }
 
+/**
+ * Guarda la distribución porcentual de macronutrientes.
+ * Valida que los porcentajes sumen 100%.
+ * @param {Event} event - Evento submit del formulario de macros.
+ */
 function handleMacroSubmit(event) {
     event.preventDefault();
     const formData = new FormData(DOM.macroForm);
