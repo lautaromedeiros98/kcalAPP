@@ -46,9 +46,22 @@ export function removeItemFromState(id) {
 
 /**
  * Borra todos los registros actuales (vacía el array).
+ * @deprecated Se debe usar removeItemsByDate para borrar solo los del día.
+ * Mantenido por compatibilidad temporal.
  */
 export function resetStateItems() {
     state.items = [];
+}
+
+/**
+ * Elimina los registros de una fecha específica.
+ * @param {string} dateString - Fecha a limpiar (toDateString).
+ */
+export function resetDailyItems(dateString) {
+    state.items = state.items.filter(item => {
+        const itemDate = new Date(item.createdAt).toDateString();
+        return itemDate !== dateString;
+    });
 }
 
 /**
@@ -58,4 +71,24 @@ export function resetStateItems() {
  */
 export function findItem(id) {
     return state.items.find((item) => item.id === id);
+}
+
+/**
+ * Devuelve los items filtrados por una fecha específica.
+ * @param {Date} dateObj - Objeto Date con la fecha deseada.
+ * @returns {Array} Array de items que coinciden con esa fecha (día, mes, año).
+ */
+export function getItemsByDate(dateObj) {
+    const targetDate = dateObj.toDateString();
+    return state.items.filter(item => {
+        const itemDate = new Date(item.createdAt).toDateString();
+        return itemDate === targetDate;
+    });
+}
+
+/**
+ * Helper para obtener los items de HOY.
+ */
+export function getTodayItems() {
+    return getItemsByDate(new Date());
 }

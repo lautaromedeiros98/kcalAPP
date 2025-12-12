@@ -5,9 +5,10 @@
  * la comunicación entre el Estado, la Persistencia y la Vista.
  */
 import { DOM } from './dom.js';
-import { state, addItemToState, updateItemInState, removeItemFromState, resetStateItems, findItem } from './state.js';
+import { state, addItemToState, updateItemInState, removeItemFromState, resetDailyItems, findItem } from './state.js';
 import { saveItems, saveTarget, saveSettings } from './storage.js';
 import { render, updateMacroTargets, switchView } from './ui/render.js';
+import { showToast } from './ui/toast.js';
 import { formatNumber, calculateBMR } from './utils.js';
 
 /**
@@ -38,8 +39,10 @@ function init() {
     DOM.macroForm.addEventListener('submit', handleMacroSubmit);
     DOM.display.listBody.addEventListener('click', handleListClick);
     DOM.buttons.reset.addEventListener('click', handleResetDay);
+    DOM.buttons.cancel.addEventListener('click', stopEditing);
 
     DOM.nav.tracker.addEventListener('click', () => switchView('tracker'));
+    DOM.nav.stats.addEventListener('click', () => switchView('stats'));
     DOM.nav.settings.addEventListener('click', () => switchView('settings'));
 
     // Set initial view state from implicit default
@@ -68,6 +71,16 @@ function handleSubmit(event) {
         return;
     }
 
+    // Validación de integridad de datos (Macros vs Calorías)
+    // 1g Prot = 4kcal, 1g Carb = 4kcal, 1g Fat = 9kcal
+    const macroCalories = (rawData.protein * 4) + (rawData.carbs * 4) + (rawData.fat * 9);
+    // Margen de error del 20% permitido
+    const margin = rawData.calories * 0.2;
+
+    if (macroCalories > (rawData.calories + margin) && rawData.calories > 0) {
+        showToast(`Cuidado: Los macros suman ${Math.round(macroCalories)} kcal, pero indicaste ${rawData.calories}. Se guardó, pero revisa los datos.`, 'warning', 5000);
+    }
+
     const itemPayload = {
         ...rawData,
         totalCalories: rawData.calories * rawData.servings,
@@ -75,8 +88,10 @@ function handleSubmit(event) {
 
     if (state.editingId) {
         updateItem(state.editingId, itemPayload);
+        showToast('Alimento actualizado correctamente', 'success');
     } else {
         addItem(itemPayload);
+        showToast('Alimento añadido a la lista', 'success');
     }
 
     stopEditing();
@@ -128,7 +143,9 @@ function startEditing(id) {
     DOM.inputs.fat.value = item.fat || '';
 
     DOM.buttons.add.textContent = 'Guardar';
+    DOM.buttons.cancel.style.display = 'inline-block'; // Show cancel button
     DOM.inputs.name.focus();
+    DOM.form.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 /**
@@ -140,6 +157,7 @@ function stopEditing() {
     DOM.form.reset();
     DOM.inputs.servings.value = 1;
     DOM.buttons.add.textContent = 'Añadir';
+    DOM.buttons.cancel.style.display = 'none'; // Hide cancel button
 }
 
 /**
@@ -153,6 +171,7 @@ function deleteItem(id) {
     }
     saveItems(state.items);
     render();
+    showToast('Alimento eliminado', 'info');
 }
 
 /**
@@ -163,10 +182,11 @@ function handleResetDay() {
     const confirmReset = window.confirm('¿Deseas eliminar todos los registros del día?');
     if (!confirmReset) return;
 
-    resetStateItems();
+    resetDailyItems(new Date().toDateString());
     stopEditing();
     saveItems(state.items);
     render();
+    showToast('Día reiniciado', 'info');
 }
 
 /**
@@ -225,7 +245,7 @@ function handleSettingsSubmit(event) {
     DOM.inputs.settingsResult.textContent = `${formatNumber(tdee)} kcal`;
     renderSummary();
 
-    alert(`¡Meta actualizada a ${tdee} kcal según tus datos!`);
+    showToast(`¡Meta actualizada a ${tdee} kcal!`, 'success');
 
     if (state.settings.macros) {
         updateMacroTargets(tdee, state.settings.macros);
@@ -245,7 +265,7 @@ function handleMacroSubmit(event) {
     const f = parseFloat(formData.get('fat'));
 
     if ((p + c + f) !== 100) {
-        alert('Los porcentajes deben sumar exactamente 100%');
+        showToast('Los porcentajes deben sumar exactamente 100%', 'error');
         return;
     }
 
@@ -255,7 +275,7 @@ function handleMacroSubmit(event) {
     saveSettings(state.settings);
 
     updateMacroTargets(state.dailyTarget, macros);
-    alert('Distribución de macros guardada.');
+    showToast('Distribución de macros guardada', 'success');
 }
 
 init();

@@ -76,6 +76,7 @@
     <!-- NAVEGACIÓN DE VISTAS -->
     <nav class="app-nav">
       <button id="navTracker" class="nav-link active">Tracker</button>
+      <button id="navStats" class="nav-link">Estadísticas</button>
       <button id="navSettings" class="nav-link">Ajustes</button>
     </nav>
 
@@ -135,6 +136,8 @@
               </select>
             </label>
             <button id="addButton" type="submit" class="primary">Añadir</button>
+            <button id="cancelButton" type="button" class="secondary hidden"
+              style="display: none; margin-left: 0.5rem;">Cancelar</button>
           </form>
         </section>
 
@@ -177,6 +180,24 @@
               </thead>
               <tbody id="foodList"></tbody>
             </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- VISTA TERCARIA: ESTADÍSTICAS -->
+    <div id="view-stats" class="hidden">
+      <main class="grid">
+        <section class="panel span-2">
+          <div class="panel-header">
+            <h2>Progreso Semanal</h2>
+            <p>Visualiza tu consumo calórico de los últimos 7 días.</p>
+          </div>
+          <!-- Contenedor para la gráfica (se rellenará dinámicamente) -->
+          <div id="statsChartContainer" class="chart-container"
+            style="min-height: 300px; display: flex; align-items: flex-end; justify-content: space-around; gap: 8px; padding-top: 2rem;">
+            <!-- Las barras se inyectarán aquí vía JS -->
+            <p style="color: var(--gray-500); width: 100%; text-align: center;">Cargando estadísticas...</p>
           </div>
         </section>
       </main>

@@ -5,8 +5,10 @@
  * basados en el estado actual de la aplicación.
  */
 import { DOM } from '../dom.js';
-import { state } from '../state.js';
+import { state, getTodayItems } from '../state.js';
 import { formatNumber } from '../utils.js';
+
+import { renderWeeklyChart } from './stats.js';
 
 /**
  * Actualiza toda la interfaz de usuario.
@@ -17,6 +19,7 @@ export function render() {
     renderSummary();
 }
 
+
 /**
  * Renderiza la tabla de alimentos consumidos.
  * - Limpia la tabla actual.
@@ -24,9 +27,10 @@ export function render() {
  * - Si hay datos, genera filas usando un DocumentFragment para mejor rendimiento.
  */
 export function renderList() {
+    const itemsToRender = getTodayItems();
     DOM.display.listBody.innerHTML = '';
 
-    if (!state.items.length) {
+    if (!itemsToRender.length) {
         const row = document.createElement('tr');
         const cell = document.createElement('td');
         cell.colSpan = 6;
@@ -39,7 +43,7 @@ export function renderList() {
     }
 
     const fragment = document.createDocumentFragment();
-    state.items.forEach((item) => {
+    itemsToRender.forEach((item) => {
         const clone = DOM.display.rowTemplate.content.cloneNode(true);
         const row = clone.querySelector('tr');
 
@@ -63,11 +67,12 @@ export function renderList() {
  * - Actualiza los contadores en el "Hero" y panel de resumen.
  */
 export function renderSummary() {
-    const total = state.items.reduce((sum, item) => sum + item.totalCalories, 0);
+    const todayItems = getTodayItems();
+    const total = todayItems.reduce((sum, item) => sum + item.totalCalories, 0);
     const remaining = Math.max(state.dailyTarget - total, 0);
     const percentage = Math.min((total / state.dailyTarget) * 100, 100);
 
-    const macros = state.items.reduce((acc, item) => ({
+    const macros = todayItems.reduce((acc, item) => ({
         p: acc.p + (item.protein * item.servings),
         c: acc.c + (item.carbs * item.servings),
         f: acc.f + (item.fat * item.servings),
@@ -134,14 +139,28 @@ export function updateMacroTargets(calories, macros) {
  * @param {string} viewName - Nombre de la vista ('tracker' o 'settings').
  */
 export function switchView(viewName) {
-    DOM.nav.tracker.classList.toggle('active', viewName === 'tracker');
-    DOM.nav.settings.classList.toggle('active', viewName === 'settings');
+    // 1. Manejo de botones de navegación (clase .active)
+    Object.keys(DOM.nav).forEach(key => {
+        const btn = DOM.nav[key];
+        if (btn) {
+            btn.classList.toggle('active', key === viewName);
+        }
+    });
 
-    if (viewName === 'tracker') {
-        DOM.views.tracker.classList.remove('hidden');
-        DOM.views.settings.classList.add('hidden');
-    } else {
-        DOM.views.tracker.classList.add('hidden');
-        DOM.views.settings.classList.remove('hidden');
+    // 2. Manejo de visibilidad de vistas (clase .hidden)
+    Object.keys(DOM.views).forEach(key => {
+        const view = DOM.views[key];
+        if (view) {
+            if (key === viewName) {
+                view.classList.remove('hidden');
+            } else {
+                view.classList.add('hidden');
+            }
+        }
+    });
+
+    // 3. Acciones específicas por vista (Hooks)
+    if (viewName === 'stats') {
+        renderWeeklyChart();
     }
 }

@@ -35,13 +35,16 @@ export const DOM = {
     buttons: {
         reset: document.getElementById('resetButton'),
         add: document.getElementById('addButton'),
+        cancel: document.getElementById('cancelButton'),
     },
     nav: {
         tracker: document.getElementById('navTracker'),
+        stats: document.getElementById('navStats'),
         settings: document.getElementById('navSettings'),
     },
     views: {
         tracker: document.getElementById('view-tracker'),
+        stats: document.getElementById('view-stats'),
         settings: document.getElementById('view-settings'),
     },
     display: {

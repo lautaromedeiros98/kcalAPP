@@ -4,38 +4,97 @@
 .app-shell {
     max-width: 1200px;
     margin: 0 auto;
+    padding-bottom: 80px;
+    /* Espacio para el bottom nav en móvil */
 }
 
 /* Navegación */
+/* Navegación (Bottom Nav Mobile First) */
 .app-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: white;
     display: flex;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--gray-300);
-    padding-bottom: 0.5rem;
+    justify-content: space-around;
+    padding: 0.75rem 0.5rem;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+    z-index: 100;
+    border-top: 1px solid var(--gray-100);
 }
 
 .nav-link {
     background: transparent;
     border: none;
-    font-size: 1rem;
+    font-size: 0.8rem;
     font-weight: 500;
     color: var(--gray-500);
     cursor: pointer;
-    padding: 0.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    padding: 0.25rem;
     border-radius: 8px;
     transition: all 0.2s ease;
 }
 
-.nav-link:hover {
-    color: var(--gray-900);
-    background: var(--gray-100);
+.nav-link::before {
+    /* Iconos emoji por ahora, luego SVG */
+    font-size: 1.25rem;
+}
+
+#navTracker::before {
+    content: "📝";
+}
+
+#navStats::before {
+    content: "📊";
+}
+
+#navSettings::before {
+    content: "⚙️";
 }
 
 .nav-link.active {
     color: var(--primary);
-    background: #fff4ef;
     font-weight: 600;
+}
+
+/* Desktop Navigation (Overrides) */
+@media (min-width: 769px) {
+    .app-shell {
+        padding-bottom: 0;
+    }
+
+    .app-nav {
+        position: static;
+        box-shadow: none;
+        border-top: none;
+        border-bottom: 1px solid var(--gray-300);
+        justify-content: flex-start;
+        padding: 0 0 0.5rem;
+        margin-bottom: 2rem;
+        gap: 1rem;
+    }
+
+    .nav-link {
+        flex-direction: row;
+        font-size: 1rem;
+        flex: 0;
+        padding: 0.5rem 1rem;
+        background: transparent;
+    }
+
+    .nav-link::before {
+        font-size: 1rem;
+    }
+
+    .nav-link.active {
+        background: #fff4ef;
+    }
 }
 
 /* Utilidades Layout */
